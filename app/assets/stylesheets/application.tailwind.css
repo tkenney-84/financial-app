@@ -9,3 +9,11 @@
 .nav-link:active,.nav-link:hover,.nav-link:focus {
   @apply bg-neutral-900 text-white rounded-md px-3 py-2 text-sm font-medium;
 }
+
+.kbutton {
+  @apply bg-green-950 rounded p-2 text-neutral-400 font-semibold cursor-pointer;
+}
+
+input {
+  @apply text-black;
+}

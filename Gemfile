@@ -2,11 +2,12 @@ source "https://rubygems.org"
 
 ruby "3.2.2"
 
+gem 'devise'              # Authentication
 gem 'psych', '~>3.0'
 gem "rails", "~> 7.1.2"
 gem "sprockets-rails"
-gem "sqlite3", "~> 1.4"
-gem "puma", ">= 5.0"
+gem "sqlite3", "~> 1.4"   # Database
+gem "puma", ">= 5.0"      # Server Deployment
 gem "importmap-rails"
 gem "turbo-rails"
 gem "stimulus-rails"
@@ -27,4 +28,4 @@ group :test do
   gem "selenium-webdriver"
 end
 
-gem "tailwindcss-rails", "~> 2.1"
+gem "tailwindcss-rails", "~> 2.1" #UI/UX

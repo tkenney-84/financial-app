@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
-  get 'finances/dashboard'
+  devise_for :users, controllers: { registrations: 'registrations' }
+  # get '/users/sign_out', to: redirect("devise/sessions#new")
+  get 'finances/dashboard', to: 'finances#dashboard', as: 'dashboard' # This is the post-auth path for users.
   get 'finances/income'
   get 'finances/one-time-transactions'
   get 'finances/recurring-transactions'
@@ -9,7 +11,10 @@ Rails.application.routes.draw do
   # Can be used by load balancers and uptime monitors to verify that the app is live.
   get "up" => "rails/health#show", as: :rails_health_check
 
-  root 'finances#dashboard'
+  # Set the root route to the prebuilt devise login page.
+  devise_scope :user do
+    root to: "devise/sessions#new", as: 'sign_out'
+  end
   # Defines the root path route ("/")
   # root "posts#index"
 end

@@ -1,0 +1,29 @@
+<div class="grid grid-cols-1 w-fit mx-auto">
+  <h1 class="font-bold text-xl mb-4">Log In</h1>
+
+  <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+    <div>
+      <%= f.label :email %><br />
+      <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "w-full" %>
+    </div>
+
+    <div>
+      <%= f.label :password %><br />
+      <%= f.password_field :password, autocomplete: "password", class: "w-full" %>
+    </div>
+
+    <% if devise_mapping.rememberable? %>
+      <div class="flex items-center mt-1">
+        <%= f.check_box :remember_me %>
+        <%= f.label :remember_me, 'Remember Me', class: "ml-1" %>
+      </div>
+    <% end %>
+
+    <div class="mt-4">
+      <%= f.submit "Login", class: "kbutton w-full" %>
+    </div>
+  <% end %>
+  <div class="flex justify-between mt-4">
+    <%= render "devise/shared/links" %>
+  </div>
+</div>
