@@ -17,3 +17,20 @@
 input {
   @apply text-black;
 }
+
+/* For the user menu in the navbar. */
+/* Initial state (hidden) */
+.menu-hidden {
+  transform: scale(0.95);
+  opacity: 0;
+  transition: transform ease-out 0.1s, opacity ease-out 0.1s;
+  pointer-events: none;
+}
+
+/* Final state (shown) */
+.menu-shown {
+  transform: scale(1);
+  opacity: 1;
+  transition: transform ease-in 0.075s, opacity ease-in 0.075s;
+  pointer-events: auto;
+}
