@@ -1,0 +1,27 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onloadTurnstileCallback" defer></script>
+<script>
+  window.onloadTurnstileCallback = function () {
+    turnstile.render('#cloudflare-captcha', {
+        sitekey: '0x4AAAAAAAQOOJsyhCP1ol-S',
+        callback: function(token) {
+          $.ajax({
+            url: '/set_session_captcha',
+            type: 'post',
+            data: { token: token },
+            headers: {
+              'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function() {
+              // console.log("CAPTCHA token stored successfully");
+            },
+            error: function() {
+              // console.log("CAPTCHA token could not be stored");
+            }
+          });
+        },
+    });
+  };
+</script>
+
+<div class="mt-4" id="cloudflare-captcha"></div>

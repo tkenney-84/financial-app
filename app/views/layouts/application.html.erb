@@ -6,12 +6,11 @@
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
     <%= stylesheet_link_tag "tailwind", "inter-font", "data-turbo-track": "reload" %>
-
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
   </head>
 
   <body class="bg-neutral-900 text-neutral-400">
-    <%= render 'finances/navigation' %>
+    <%= render 'shared/navigation' %>
     <main class="mx-14 mt-14">
       <%= yield %>
     </main>

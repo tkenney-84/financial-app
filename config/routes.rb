@@ -1,11 +1,16 @@
 Rails.application.routes.draw do
-  devise_for :users, controllers: { registrations: 'registrations' }
-  # get '/users/sign_out', to: redirect("devise/sessions#new")
+
+  # Load devise routes and use custom registration controller.
+  devise_for :users, controllers: { registrations: 'users/registrations', sessions: 'users/sessions' }
+
+  # GET
   get 'finances/dashboard', to: 'finances#dashboard', as: 'dashboard' # This is the post-auth path for users.
   get 'finances/income'
   get 'finances/one-time-transactions'
   get 'finances/recurring-transactions'
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
+
+  # POST
+  post '/set_session_captcha', to: 'captcha#setSessionCaptcha'
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.

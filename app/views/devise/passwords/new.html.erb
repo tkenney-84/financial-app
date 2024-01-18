@@ -9,6 +9,8 @@
       <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "w-full" %>
     </div>
 
+    <%= render 'shared/captcha' %>
+
     <div class="actions">
       <%= f.submit "Send Password Reset Instructions", class: "kbutton w-full mt-4" %>
     </div>
