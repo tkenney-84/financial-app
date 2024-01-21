@@ -10,7 +10,7 @@ module Users
             else
               sign_out(resource_name)
               flash[:alert] = "CAPTCHA Verification Failed"
-              redirect_to new_user_session_path
+              redirect_to sign_out_path
             end
         end
     
