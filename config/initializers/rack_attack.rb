@@ -17,4 +17,11 @@ class Rack::Attack
         req.ip
       end
     end
+  
+    # Throttle getLoginRequirements by IP address
+    throttle('getLoginRequirements/ip', limit: 60, period: 1.minute) do |req|
+      if req.path == '/password_requirements' && req.get?
+        req.ip
+      end
+    end
   end

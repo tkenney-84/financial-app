@@ -1,13 +1,15 @@
 Rails.application.routes.draw do
 
   # Load devise routes and use custom registration controller.
-  devise_for :users, controllers: { registrations: 'users/registrations', sessions: 'users/sessions' }
+  devise_for :users, controllers: { registrations: 'devise_custom/registrations', sessions: 'devise_custom/sessions' }
 
   # GET
   get 'finances/dashboard', to: 'finances#dashboard', as: 'dashboard' # This is the post-auth path for users.
   get 'finances/income'
   get 'finances/one-time-transactions'
   get 'finances/recurring-transactions'
+
+  get '/password_requirements', to: 'users#get_password_requirements'
 
   # POST
   post '/set_session_captcha', to: 'captcha#setSessionCaptcha'

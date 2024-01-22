@@ -15,5 +15,6 @@ class User < ApplicationRecord
          :timeoutable
 
   validates :password, password_complexity: true
+  validates :email, email_format: true
 
 end

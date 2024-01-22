@@ -1,3 +1,92 @@
+<script>
+  document.addEventListener('DOMContentLoaded', (event) => {
+    const passwordField = document.getElementById('password-field');
+    const passwordConfirmationField = document.getElementById('password-confirmation-field');
+    const hidePasswordSvg = document.getElementById('hide-password-svg');
+    const showPasswordSvg = document.getElementById('show-password-svg');
+
+    hidePasswordSvg.addEventListener('click', () => {
+      passwordField.type = 'text';
+      passwordConfirmationField.type = 'text';
+      hidePasswordSvg.style.display = 'none';
+      showPasswordSvg.style.display = 'block';
+    });
+
+    showPasswordSvg.addEventListener('click', () => {
+      passwordField.type = 'password';
+      passwordConfirmationField.type = 'password';
+      hidePasswordSvg.style.display = 'block';
+      showPasswordSvg.style.display = 'none';
+    });
+  });
+
+  document.addEventListener('DOMContentLoaded', async (event) => {
+    const passwordField = document.getElementById('password-field');
+    const confirmPasswordField = document.getElementById('password-confirmation-field');
+    const emailField = document.getElementById('user-email');
+    const passwordError = document.getElementById('password-error');
+    const emailError = document.getElementById('email-error');
+    const signUpButton = document.getElementById('sign-up-button');
+
+    const response = await fetch('/password_requirements');
+    const requirements = await response.json();
+
+    const validateInput = function() {
+      const password = passwordField.value;
+      const confirmPassword = confirmPasswordField.value;
+      const email = emailField.value;
+
+
+      const emailNotEmpty = email.length > 0;
+      const emailIsInEmailFormat = /\S+@\S+\.\S+/.test(email);
+
+      const specialCharRegex = new RegExp(`[${requirements.valid_special_characters}]`);
+
+      const hasValidLength = password.length >= requirements.minimum && password.length <= requirements.maximum;
+      const hasUpperCase = requirements.uppercase ? /[A-Z]/.test(password) : true;
+      const hasLowerCase = requirements.lowercase ? /[a-z]/.test(password) : true;
+      const hasNumber = requirements.numbers ? /\d/.test(password) : true;
+      const hasSpecialChar = requirements.special_characters ? specialCharRegex.test(password) : true;
+      const confirmPasswordMatchesPassword = password === confirmPassword;
+
+      const passwordValid = hasValidLength && hasUpperCase && hasLowerCase && hasNumber && hasSpecialChar && confirmPasswordMatchesPassword;
+      const emailValid = emailNotEmpty && emailIsInEmailFormat;
+
+      var errorMessage = "";
+
+      if (passwordValid) {
+        passwordError.innerHTML = '';
+      } else {
+        if (!hasValidLength) errorMessage += '<p>Must be between ' + requirements.minimum + ' and ' + requirements.maximum + ' characters long. (Currently ' + password.length + ' characters)</p>';
+        if (!hasUpperCase) errorMessage += '<p>Must contain ' + requirements.uppercase + ' uppercase letter' + ((requirements.uppercase > 1) ? "s" : "") + '.</p>';
+        if (!hasLowerCase) errorMessage += '<p>Must contain ' + requirements.lowercase + ' lowercase letter' + ((requirements.lowercase > 1) ? "s" : "") + '.</p>';
+        if (!hasNumber) errorMessage += '<p>Must contain ' + requirements.numbers + ' number' + ((requirements.numbers > 1) ? "s" : "") + '.</p>';
+        if (!hasSpecialChar) errorMessage += '<p>Must contain ' + requirements.special_characters + ' special character' + ((requirements.special_characters > 1) ? "s" : "") + ' ( ' + requirements.valid_special_characters + ' ).</p>';
+        if (!confirmPasswordMatchesPassword) errorMessage += '<p>Must match confirm password.</p>';
+
+        passwordError.innerHTML = errorMessage;
+      }
+
+      if (emailValid) {
+        emailError.innerHTML = '';
+      } else {
+        var errorMessage = "";
+        if (!emailNotEmpty) errorMessage += '<p>The email field must not be empty.</p>';
+        if (!emailIsInEmailFormat) errorMessage += '<p>The email field must be in the form of a valid email. i.e. example@example.com</p>';
+
+        emailError.innerHTML = errorMessage;
+      }
+
+      signUpButton.disabled = !passwordValid || !emailValid;
+
+    };
+
+    validateInput();
+    emailField.addEventListener('input', validateInput);
+    passwordField.addEventListener('input', validateInput);
+    confirmPasswordField.addEventListener('input', validateInput);
+  });
+</script>
 <div class="grid grid-cols-1 w-fit mx-auto">
   <h1 class="font-bold text-xl mb-4">Sign Up</h1>
 
@@ -6,30 +95,37 @@
 
     <div class="field">
       <%= f.label :email %>
-      <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "w-full" %>
+      <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "w-full", id: "user-email" %>
     </div>
+    <div id="email-error" class="text-red-600"></div>
 
-    <div class="field">
+    <div class="field password-wrapper">
       <%= f.label :password %>
-      <%= f.password_field :password, autocomplete: "new-password", class: "w-full" %>
-      <em><%= @minimum_password_length %> character minimum</em><br />
-      <em><%= @maximum_password_length %> character maximum</em><br />
-      <em><%= User::PASSWORD_REQUIREMENTS[:minimum_capital_letters] %> lower case letter<% if User::PASSWORD_REQUIREMENTS[:minimum_capital_letters] > 1 %>s<% end %></em><br />
-      <em><%= User::PASSWORD_REQUIREMENTS[:minimum_lower_case_letters] %> upper case letter<% if User::PASSWORD_REQUIREMENTS[:minimum_lower_case_letters] > 1 %>s<% end %></em><br />
-      <em><%= User::PASSWORD_REQUIREMENTS[:minimum_numbers] %> number<% if User::PASSWORD_REQUIREMENTS[:minimum_numbers] > 1 %>s<% end %></em><br />
-      <em><%= User::PASSWORD_REQUIREMENTS[:minimum_special_characters] %> special character<% if User::PASSWORD_REQUIREMENTS[:minimum_special_characters] > 1 %>s<% end %></em><br />
-      <em>Valid special characters: <%= User::PASSWORD_REQUIREMENTS[:valid_special_characters] %></em>
+      <%= f.password_field :password, autocomplete: "new-password", class: "w-full", id: "password-field" %>
+
+      <!-- This SVG is the regular eyeball, indicating the password is currently hidden. -->
+      <svg id="hide-password-svg" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 password-icon">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+      </svg>
+
+      <!-- This SVG is the crossed out eyeball, indicating the password is currently shown. -->
+      <svg id="show-password-svg" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 hidden password-icon">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 0 0 1.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.451 10.451 0 0 1 12 4.5c4.756 0 8.773 3.162 10.065 7.498a10.522 10.522 0 0 1-4.293 5.774M6.228 6.228 3 3m3.228 3.228 3.65 3.65m7.894 7.894L21 21m-3.228-3.228-3.65-3.65m0 0a3 3 0 1 0-4.243-4.243m4.242 4.242L9.88 9.88" />
+      </svg>
+
     </div>
+    <div id="password-error" class="text-red-600"></div>
 
     <div class="field mt-2">
       <%= f.label :password_confirmation, "Confirm Password" %>
-      <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "w-full" %>
+      <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "w-full", id: "password-confirmation-field" %>
     </div>
 
     <%= render 'shared/captcha' %>
 
     <div class="actions">
-      <%= f.submit "Sign Up", class: "kbutton w-full mt-4" %>
+      <%= f.submit "Sign Up", class: "kbutton w-full mt-4", id: "sign-up-button", disabled: true %>
     </div>
   <% end %>
 

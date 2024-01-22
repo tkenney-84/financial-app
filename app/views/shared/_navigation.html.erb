@@ -9,44 +9,31 @@
     const mobileDropdownMenu = document.getElementById('mobile-user-menu');
 
     // Toggle the display of the dropdown menu when the button is clicked
-    dropdownButton.addEventListener('click', (event) => {
-      event.stopPropagation(); // Prevent the document click event from firing
-      if (dropdownMenu.classList.contains('menu-hidden')) {
-        dropdownMenu.classList.remove('menu-hidden');
-        dropdownMenu.classList.add('menu-shown');
-      } else {
-        dropdownMenu.classList.remove('menu-shown');
-        dropdownMenu.classList.add('menu-hidden');
-      }
-    });
+    if (dropdownButton != null && dropdownMenu != null) {
+      dropdownButton.addEventListener('click', (event) => {
+        event.stopPropagation(); // Prevent the document click event from firing
+        if (dropdownMenu.classList.contains('menu-hidden')) {
+          dropdownMenu.classList.remove('menu-hidden');
+          dropdownMenu.classList.add('menu-shown');
+        } else {
+          dropdownMenu.classList.remove('menu-shown');
+          dropdownMenu.classList.add('menu-hidden');
+        }
+      });
+      
+      // Hide the dropdown menu when the document is clicked
+      document.addEventListener('click', () => {
+        if (dropdownMenu.classList.contains('menu-shown')) {
+          dropdownMenu.classList.remove('menu-shown');
+          dropdownMenu.classList.add('menu-hidden');
+        }
+      });
 
-    // Hide the dropdown menu when the document is clicked
-    document.addEventListener('click', () => {
-      if (dropdownMenu.classList.contains('menu-shown')) {
-        dropdownMenu.classList.remove('menu-shown');
-        dropdownMenu.classList.add('menu-hidden');
-      }
-    });
-
-    // Prevent the document click event from firing when the dropdown menu is clicked
-    dropdownMenu.addEventListener('click', (event) => {
-      event.stopPropagation();
-    });
-
-    // Prevent the document click event from firing when the dropdown menu is clicked
-    mobileDropdownMenu.addEventListener('click', (event) => {
-      event.stopPropagation();
-    });
-
-    /* mobileDropdownButton.addEventListener('click', () => {
-      if (mobileDropdownMenu.classList.contains('menu-hidden')) {
-        mobileDropdownMenu.classList.remove('menu-hidden');
-        mobileDropdownMenu.classList.add('menu-shown');
-      } else {
-        mobileDropdownMenu.classList.remove('menu-shown');
-        mobileDropdownMenu.classList.add('menu-hidden');
-      }
-    }); */
+      // Prevent the document click event from firing when the dropdown menu is clicked
+      dropdownMenu.addEventListener('click', (event) => {
+        event.stopPropagation();
+      });
+    }
   });
 </script>
 <nav class="bg-green-950">

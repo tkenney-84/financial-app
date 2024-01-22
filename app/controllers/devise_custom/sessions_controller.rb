@@ -1,5 +1,7 @@
-module Users
+module DeviseCustom
     class SessionsController < Devise::SessionsController
+
+        # On session creation (sign in), ensures the users CAPTCHA token is legit by verifying server-side.
         def create
             self.resource = warden.authenticate!(auth_options)
             if verifyCaptcha

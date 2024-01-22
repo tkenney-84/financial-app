@@ -1,0 +1,22 @@
+<%= form_for @user do |f| %>
+    <div>
+      <%= f.label :email %><br />
+      <%= f.email_field :email %>
+    </div>
+  
+    <div>
+      <%= f.label :password %><br />
+      <%= f.password_field :password %>
+    </div>
+  
+    <div>
+      <%= f.label :password_confirmation %><br />
+      <%= f.password_field :password_confirmation %>
+    </div>
+  
+    <%= f.submit 'Update Profile' %>
+  <% end %>
+  
+  <%= link_to 'Enable 2FA via Email', enable_email_two_factor_users_path %>
+  <%= link_to 'Enable 2FA via Phone', enable_phone_two_factor_users_path %>
+  <%= link_to 'Enable 2FA via Authenticator App', enable_auth_app_two_factor_users_path %>
