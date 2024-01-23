@@ -4,7 +4,7 @@ class EmailFormatValidator < ActiveModel::EachValidator
 
       emailIsInEmailFormat = /\S+@\S+\.\S+/.match(value)
 
-      unless value =~ regex
+      unless emailIsInEmailFormat
         record.errors.add(attribute, options[:message] || 'email must be in the form of a valid email. i.e. example@example.com')
       end
     end
